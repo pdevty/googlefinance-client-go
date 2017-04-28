@@ -22,7 +22,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	prices, err := gf.GetPrices(ctx, &gf.Query{p: "1Y", i: "86400", x: "TYO", q: "7203"})
+	prices, err := gf.GetPrices(ctx, &gf.Query{P: "1Y", I: "86400", X: "TYO", Q: "7203"})
 	if err != nil {
 		panic(err)
 	}
