@@ -3,7 +3,6 @@ package googlefinance
 import (
 	"context"
 	"encoding/csv"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
