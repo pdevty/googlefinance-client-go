@@ -14,7 +14,10 @@ execute:
 package main
 
 import (
+	"context"
+	"fmt"
 	gf "github.com/pdevty/googlefinance-client-go"
+	"time"
 )
 
 func main() {

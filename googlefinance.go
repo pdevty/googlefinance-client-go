@@ -17,7 +17,7 @@ type Query struct {
 	I  string
 	P  string
 	Ts string
-	// f  string
+	// F  string
 }
 
 // Price price
@@ -93,8 +93,8 @@ func GetPrices(ctx context.Context, query *Query) (*[]Price, error) {
 	if query.P != "" {
 		v.Set("p", query.P)
 	}
-	// if query.f != "" {
-	// 	v.Set("f", query.f)
+	// if query.F != "" {
+	// 	v.Set("f", query.F)
 	// }
 	if query.Ts != "" {
 		v.Set("ts", query.Ts)
