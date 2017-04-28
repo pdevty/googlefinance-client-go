@@ -12,11 +12,11 @@ import (
 
 // Query query
 type Query struct {
-	q  string
-	x  string
-	i  string
-	p  string
-	ts string
+	Q  string
+	X  string
+	I  string
+	P  string
+	Ts string
 	// f  string
 }
 
@@ -35,7 +35,7 @@ func decodeBody(resp *http.Response, query *Query) (*[]Price, error) {
 	r := csv.NewReader(resp.Body)
 	var a, d int64
 	var date time.Time
-	interval, _ := strconv.ParseInt(query.i, 10, 64)
+	interval, _ := strconv.ParseInt(query.I, 10, 64)
 	prices := []Price{}
 	for i := 1; ; i++ {
 		row, err := r.Read()
@@ -81,23 +81,23 @@ func GetPrices(ctx context.Context, query *Query) (*[]Price, error) {
 
 	v := url.Values{}
 
-	if query.q != "" {
-		v.Set("q", query.q)
+	if query.Q != "" {
+		v.Set("q", query.Q)
 	}
-	if query.x != "" {
-		v.Set("x", query.x)
+	if query.X != "" {
+		v.Set("x", query.X)
 	}
-	if query.i != "" {
-		v.Set("i", query.i)
+	if query.I != "" {
+		v.Set("i", query.I)
 	}
-	if query.p != "" {
-		v.Set("p", query.p)
+	if query.P != "" {
+		v.Set("p", query.P)
 	}
 	// if query.f != "" {
 	// 	v.Set("f", query.f)
 	// }
-	if query.ts != "" {
-		v.Set("ts", query.ts)
+	if query.Ts != "" {
+		v.Set("ts", query.Ts)
 	}
 
 	u.RawQuery = v.Encode()
