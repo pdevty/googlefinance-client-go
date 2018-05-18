@@ -46,7 +46,7 @@ func decodeBody(resp *http.Response, query *Query) (*[]Price, error) {
 			return nil, err
 		}
 
-		if i >= 9 {
+		if i >= 8 {
 			if row[0][0:1] == "a" {
 				d, _ = strconv.ParseInt(row[0][1:], 10, 64)
 				a = d
