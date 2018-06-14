@@ -51,31 +51,33 @@ func decodeBody(resp *http.Response, query *Query) ([]Price, error) {
 			return nil, err
 		}
 
-		if i >= 8 {
-			if row[0][0:1] == "a" {
-				d, _ = strconv.ParseInt(row[0][1:], 10, 64)
-				a = d
-				date = time.Unix(a, 0)
-			} else {
-				d, _ = strconv.ParseInt(row[0], 10, 64)
-				date = time.Unix(a+(d*interval), 0)
-			}
-
-			close, _ := strconv.ParseFloat(row[1], 64)
-			high, _ := strconv.ParseFloat(row[2], 64)
-			low, _ := strconv.ParseFloat(row[3], 64)
-			open, _ := strconv.ParseFloat(row[4], 64)
-			volume, _ := strconv.ParseInt(row[5], 10, 64)
-
-			prices = append(prices, Price{
-				Date:   date,
-				Close:  close,
-				High:   high,
-				Low:    low,
-				Open:   open,
-				Volume: volume,
-			})
+		if len(row) == 1 {
+			continue
 		}
+
+		if row[0][0:1] == "a" {
+			d, _ = strconv.ParseInt(row[0][1:], 10, 64)
+			a = d
+			date = time.Unix(a, 0)
+		} else {
+			d, _ = strconv.ParseInt(row[0], 10, 64)
+			date = time.Unix(a+(d*interval), 0)
+		}
+
+		close, _ := strconv.ParseFloat(row[1], 64)
+		high, _ := strconv.ParseFloat(row[2], 64)
+		low, _ := strconv.ParseFloat(row[3], 64)
+		open, _ := strconv.ParseFloat(row[4], 64)
+		volume, _ := strconv.ParseInt(row[5], 10, 64)
+
+		prices = append(prices, Price{
+			Date:   date,
+			Close:  close,
+			High:   high,
+			Low:    low,
+			Open:   open,
+			Volume: volume,
+		})
 	}
 	return prices, nil
 }
