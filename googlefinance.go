@@ -30,15 +30,20 @@ type Price struct {
 	Volume int64     `json:"volume"`
 }
 
-func decodeBody(resp *http.Response, query *Query) (*[]Price, error) {
+func decodeBody(resp *http.Response, query *Query) ([]Price, error) {
 	defer resp.Body.Close()
+
 	r := csv.NewReader(resp.Body)
+
 	var a, d int64
 	var date time.Time
+	prices := make([]Price, 0)
+
 	interval, _ := strconv.ParseInt(query.I, 10, 64)
-	prices := []Price{}
+
 	for i := 1; ; i++ {
 		row, err := r.Read()
+
 		if err == io.EOF {
 			break
 		} else if perr, ok := err.(*csv.ParseError); ok && perr.Err == csv.ErrFieldCount {
@@ -46,36 +51,39 @@ func decodeBody(resp *http.Response, query *Query) (*[]Price, error) {
 			return nil, err
 		}
 
-		if i >= 9 {
-			if row[0][0:1] == "a" {
-				d, _ = strconv.ParseInt(row[0][1:], 10, 64)
-				a = d
-				date = time.Unix(a, 0)
-			} else {
-
-				d, _ = strconv.ParseInt(row[0], 10, 64)
-				date = time.Unix(a+(d*interval), 0)
-			}
-			close, _ := strconv.ParseFloat(row[1], 64)
-			high, _ := strconv.ParseFloat(row[2], 64)
-			low, _ := strconv.ParseFloat(row[3], 64)
-			open, _ := strconv.ParseFloat(row[4], 64)
-			volume, _ := strconv.ParseInt(row[5], 10, 64)
-
-			prices = append(prices, Price{
-				Date:   date,
-				Close:  close,
-				High:   high,
-				Low:    low,
-				Open:   open,
-				Volume: volume})
+		if len(row) == 1 {
+			continue
 		}
+
+		if row[0][0:1] == "a" {
+			d, _ = strconv.ParseInt(row[0][1:], 10, 64)
+			a = d
+			date = time.Unix(a, 0)
+		} else {
+			d, _ = strconv.ParseInt(row[0], 10, 64)
+			date = time.Unix(a+(d*interval), 0)
+		}
+
+		close, _ := strconv.ParseFloat(row[1], 64)
+		high, _ := strconv.ParseFloat(row[2], 64)
+		low, _ := strconv.ParseFloat(row[3], 64)
+		open, _ := strconv.ParseFloat(row[4], 64)
+		volume, _ := strconv.ParseInt(row[5], 10, 64)
+
+		prices = append(prices, Price{
+			Date:   date,
+			Close:  close,
+			High:   high,
+			Low:    low,
+			Open:   open,
+			Volume: volume,
+		})
 	}
-	return &prices, nil
+	return prices, nil
 }
 
 // GetPrices get prices
-func GetPrices(ctx context.Context, query *Query) (*[]Price, error) {
+func GetPrices(ctx context.Context, query *Query) ([]Price, error) {
 
 	u, _ := url.Parse("https://www.google.com/finance/getprices")
 
